@@ -10,7 +10,6 @@ public class SaveManager : MonoBehaviour
     public static SaveManager instance;
     public SaveScriptableObject saveScriptableObject;
 
-    //public int premium;
     public Level level;
     
     void Start()
@@ -21,26 +20,34 @@ public class SaveManager : MonoBehaviour
         Load();
     }
 
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Save();
+        }
+    }
+
     public void Save()
     {
         BinaryFormatter formatter = new BinaryFormatter();
         string path = Application.persistentDataPath + "/save.sav";
-        FileStream stream = new FileStream(path, FileMode.Create);
 
-        level.AddExp((int)GameMaster.instance.experience);
-
-        SaveObject data = new SaveObject
+        using (FileStream stream = new FileStream(path, FileMode.Create))
         {
-            //premiumCurrency = premium,
-            curLevel = level.currentLevel,
-            curXP = level.experience,
-            maxXP = level.MAX_EXP,
-            credits = (int)saveScriptableObject.coins,
-            skinIndex = saveScriptableObject.skinIndex,
-        };
+            level.AddExp((int)GameMaster.instance.experience);
 
-        formatter.Serialize(stream, data);
-        stream.Close();
+            SaveObject data = new SaveObject
+            {
+                curLevel = level.currentLevel,
+                curXP = level.experience,
+                maxXP = level.MAX_EXP,
+                credits = (int)saveScriptableObject.coins,
+                skinIndex = saveScriptableObject.skinIndex,
+            };
+
+            formatter.Serialize(stream, data);
+        };
     }
 
     public SaveObject Load()
@@ -51,9 +58,14 @@ public class SaveManager : MonoBehaviour
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(path, FileMode.Open);
             Debug.Log(path);
+
+            if(stream.Length == 0)
+            {
+                Debug.Log("Save is empty");
+            }
+
             SaveObject data = formatter.Deserialize(stream) as SaveObject;
 
-            //premium = data.premiumCurrency;
             level.currentLevel = data.curLevel;
             level.experience = data.curXP;
             level.MAX_EXP = data.maxXP;
@@ -73,7 +85,6 @@ public class SaveManager : MonoBehaviour
 
     public void LevelUp()
     {
-        //premium++;
         saveScriptableObject.coins += 500;
         Save();
     }
@@ -82,7 +93,7 @@ public class SaveManager : MonoBehaviour
     [System.Serializable]
     public class SaveObject
     {
-        //public int premiumCurrency;
+        //Money
         public int credits;
 
         //Level
@@ -90,6 +101,7 @@ public class SaveManager : MonoBehaviour
         public int curXP;
         public int maxXP;
 
+        //Skins
         public int skinIndex;
     }
 }

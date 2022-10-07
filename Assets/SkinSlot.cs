@@ -60,11 +60,13 @@ public class SkinSlot : MonoBehaviour
         {
             SaveScriptableObject.owned[index] = true;
             isOwned = true;
+            SaveManager.instance.Save();
         }
     }
 
     public void Use()
     {
         SaveScriptableObject.skinIndex = index;
+        SaveManager.instance.Save();
     }
 }
