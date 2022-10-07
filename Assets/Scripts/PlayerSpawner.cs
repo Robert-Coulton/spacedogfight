@@ -20,11 +20,10 @@ public class PlayerSpawner : MonoBehaviour {
 	int restartCount = 0;
 
 	public InterstitialAd ad;
-	bool gameOverCounted = false;
+	public bool gameOverCounted = false;
 
 	public EnemySpawner spawner;
 
-	// Use this for initialization
 	void Start () {
 		SpawnPlayer();
 	}
@@ -35,7 +34,6 @@ public class PlayerSpawner : MonoBehaviour {
 		playerInstance = (GameObject)Instantiate(playerPrefab, transform.position, Quaternion.identity);
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		lives.text = numLives.ToString("");
 		if(playerInstance == null && numLives > 0) {
@@ -59,6 +57,7 @@ public class PlayerSpawner : MonoBehaviour {
             {
 				restartCount++;
 				gameOverCounted = true;
+				SaveManager.instance.Save();
 			}
 
 			if (restartCount > 3)
@@ -66,8 +65,6 @@ public class PlayerSpawner : MonoBehaviour {
 				ad.ShowAd();
 				restartCount = 0;
             }
-
-			SaveManager.instance.Save();
 
 			spawner.ResetTime();
 		}

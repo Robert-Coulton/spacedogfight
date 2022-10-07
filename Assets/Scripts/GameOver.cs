@@ -13,11 +13,9 @@ public class GameOver : MonoBehaviour
     public void Restart()
     {
         playerSpawner.gameOver = false;
+        playerSpawner.gameOverCounted = false;
+        GameMaster.instance.GameOver = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);        
-        //Time.timeScale = 1f;
-        //gameOverUI.SetActive(false);
-        //gameOverUI.SetActive(true);
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void LoadMenu()

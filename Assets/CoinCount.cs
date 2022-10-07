@@ -12,4 +12,9 @@ public class CoinCount : MonoBehaviour
     {
         coinText.text = ((int)save.coins).ToString();
     }
+
+    public void UpdateCoinText()
+    {
+        coinText.text = ((int)save.coins).ToString();
+    }
 }

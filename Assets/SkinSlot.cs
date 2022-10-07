@@ -15,6 +15,7 @@ public class SkinSlot : MonoBehaviour
 
     public SaveScriptableObject SaveScriptableObject;
     public int index;
+    public CoinCount coinCount;
 
     private void Start()
     {
@@ -58,9 +59,11 @@ public class SkinSlot : MonoBehaviour
     {
         if(SaveScriptableObject.coins >= price)
         {
+            SaveScriptableObject.coins -= price;
             SaveScriptableObject.owned[index] = true;
             isOwned = true;
             SaveManager.instance.Save();
+            coinCount.UpdateCoinText();
         }
     }
 

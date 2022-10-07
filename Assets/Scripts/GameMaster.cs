@@ -21,29 +21,41 @@ public class GameMaster : MonoBehaviour
     public PlayerSpawner playerSpawner;
 
     public static GameMaster instance;
-
+    public bool GameOver = false;
 
     // Start is called before the first frame update
     void Start()
     {
         score = 1f;
         instance = this;
+        GameOver = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(playerSpawner.gameOver != true)
+        if(!playerSpawner.gameOver)
         {
             score += timeMultiplier * Time.deltaTime;
             scoreText[0].text = score.ToString("0");
             scoreText[1].text = "   " + score.ToString("0");
-
-            experience += score * Time.deltaTime * experienceMultiplier;
-            experienceText.text = "+ " + experience.ToString("#") + " Experience";
-
-            SaveScriptableObject.coins += score * Time.deltaTime * creditMultiplier;
-            creditText.text = "+ " + SaveScriptableObject.coins.ToString("#") + " Credits";
         }
+        else
+        {
+            if (!GameOver)
+            {
+                UpdateCoinsAndExperience();
+                GameOver = true;
+            }
+        }
+    }
+
+    public void UpdateCoinsAndExperience()
+    {
+        experience += score * experienceMultiplier;
+        experienceText.text = "+ " + experience.ToString("#") + " Experience";
+
+        SaveScriptableObject.coins += score * creditMultiplier;
+        creditText.text = "+ " + SaveScriptableObject.coins.ToString("#") + " Credits";
     }
 }
